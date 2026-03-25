@@ -41,4 +41,4 @@ class Expected {
   std::variant<T, E> value_;
 };
 
-}  // namespace clearspace::transport
+}

@@ -55,4 +55,4 @@ class ClientSession final : public std::enable_shared_from_this<ClientSession> {
   std::atomic_bool stopped_{false};
 };
 
-}  // namespace clearspace::server
+}

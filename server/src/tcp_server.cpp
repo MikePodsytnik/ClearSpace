@@ -45,4 +45,4 @@ void TcpServer::onAccept(const boost::system::error_code& ec, tcp::socket socket
   }
 }
 
-}  // namespace clearspace::server
+}

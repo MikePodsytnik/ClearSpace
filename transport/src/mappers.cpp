@@ -5,8 +5,6 @@
 #include "clearspace/core/drawing.hpp"
 
 namespace clearspace::transport {
-namespace {
-
 clearspace::core::Expected<clearspace::core::Color, clearspace::core::Error> toColor(std::uint8_t color) {
   if (color > static_cast<std::uint8_t>(clearspace::core::Color::Blue)) {
     return clearspace::core::Error::invalidParams("invalid color");
@@ -40,7 +38,6 @@ StrokeDto fromCoreStroke(const clearspace::core::Stroke& stroke) {
   return dto;
 }
 
-}  // namespace
 
 clearspace::core::Expected<clearspace::core::EventPayload, clearspace::core::Error> toCoreEvent(
     const StrokeBeginRequest& request) {
@@ -158,4 +155,4 @@ ServerMessage toServerMessage(const clearspace::core::OutgoingEvent& ev) {
       ev.payload);
 }
 
-}  // namespace clearspace::transport
+}

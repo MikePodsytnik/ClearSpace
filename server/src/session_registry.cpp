@@ -34,4 +34,4 @@ void SessionRegistry::deliver(clearspace::core::ClientId id, const clearspace::t
   }
 }
 
-}  // namespace clearspace::server
+}

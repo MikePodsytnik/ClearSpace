@@ -33,4 +33,4 @@ class TcpServer final {
   std::atomic<clearspace::core::ClientId> nextClientId_{1};
 };
 
-}  // namespace clearspace::server
+}

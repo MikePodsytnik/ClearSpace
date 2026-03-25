@@ -25,4 +25,4 @@ ServerMessage toErrorMessage(const clearspace::core::Error& error);
 
 std::string errorCodeToString(clearspace::core::ErrorCode code);
 
-}  // namespace clearspace::transport
+}

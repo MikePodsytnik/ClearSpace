@@ -23,4 +23,4 @@ class SessionRegistry final {
   mutable std::unordered_map<clearspace::core::ClientId, std::weak_ptr<ClientSession>> sessions_;
 };
 
-}  // namespace clearspace::server
+}

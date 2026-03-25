@@ -12,4 +12,4 @@ namespace clearspace::transport {
 Expected<ClientMessage, ProtocolError> parseClientMessage(std::string_view line);
 std::string serializeServerMessage(const ServerMessage& msg);
 
-}  // namespace clearspace::transport
+}

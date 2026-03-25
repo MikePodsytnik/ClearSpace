@@ -8,7 +8,6 @@
 #include "clearspace/transport/protocol_error.hpp"
 
 namespace clearspace::server {
-namespace {
 
 clearspace::core::Error protocolToCoreError(const clearspace::transport::ProtocolError& error) {
   switch (error.code) {
@@ -21,8 +20,6 @@ clearspace::core::Error protocolToCoreError(const clearspace::transport::Protoco
   }
   return clearspace::core::Error::invalidParams(error.message);
 }
-
-}  // namespace
 
 ClientSession::ClientSession(tcp::socket socket,
                              clearspace::core::ClientId clientId,
@@ -210,4 +207,4 @@ void ClientSession::dispatchOutgoing(const std::vector<clearspace::core::Outgoin
   }
 }
 
-}  // namespace clearspace::server
+}

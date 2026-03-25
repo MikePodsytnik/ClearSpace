@@ -144,4 +144,4 @@ using ServerMessage = std::variant<
     ClearEvent,
     MemberLeftEvent>;
 
-}  // namespace clearspace::transport
+}

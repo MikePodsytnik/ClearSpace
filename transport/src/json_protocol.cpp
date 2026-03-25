@@ -261,4 +261,4 @@ std::string serializeServerMessage(const ServerMessage& msg) {
   return object.dump();
 }
 
-}  // namespace clearspace::transport
+}

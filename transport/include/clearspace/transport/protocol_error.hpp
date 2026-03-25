@@ -38,4 +38,4 @@ struct ProtocolError {
   }
 };
 
-}  // namespace clearspace::transport
+}
