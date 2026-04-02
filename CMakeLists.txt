@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.20)
 
+if (POLICY CMP0167)
+  cmake_policy(SET CMP0167 NEW)
+endif()
+
 project(clearspace
   VERSION 0.2.0
-  DESCRIPTION "ClearSpace core + persistence (phase 1)"
+  DESCRIPTION "ClearSpace core + persistence + network API"
   LANGUAGES CXX
 )
 
@@ -16,6 +20,9 @@ option(CLEARSPACE_ENABLE_TESTS "Build tests" ON)
 
 set(CLEARSPACE_SANITIZER "none" CACHE STRING "Sanitizer: none|asan|tsan|ubsan")
 set_property(CACHE CLEARSPACE_SANITIZER PROPERTY STRINGS none asan tsan ubsan)
+
+find_package(Boost CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 function(clearspace_enable_warnings target_name)
   if (MSVC)
@@ -60,6 +67,9 @@ endfunction()
 
 add_subdirectory(core)
 add_subdirectory(persistence)
+add_subdirectory(transport)
+add_subdirectory(server)
+add_subdirectory(app)
 
 if (CLEARSPACE_ENABLE_TESTS)
   enable_testing()
