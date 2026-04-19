@@ -1,0 +1,79 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "dev",
+      "displayName": "Developer build",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/dev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CLEARSPACE_ENABLE_TESTS": "ON",
+        "CLEARSPACE_ENABLE_QT_CLIENT": "ON",
+        "CLEARSPACE_DEPS_MODE": "auto",
+        "CLEARSPACE_QT_MODE": "deploy"
+      }
+    },
+    {
+      "name": "release-bundle",
+      "displayName": "Release bundle",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/release-bundle",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CLEARSPACE_ENABLE_TESTS": "OFF",
+        "CLEARSPACE_ENABLE_QT_CLIENT": "ON",
+        "CLEARSPACE_DEPS_MODE": "auto",
+        "CLEARSPACE_QT_MODE": "deploy"
+      }
+    },
+    {
+      "name": "release-static-qt",
+      "displayName": "Release with static Qt build",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/release-static-qt",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CLEARSPACE_ENABLE_TESTS": "OFF",
+        "CLEARSPACE_ENABLE_QT_CLIENT": "ON",
+        "CLEARSPACE_DEPS_MODE": "fetch",
+        "CLEARSPACE_QT_MODE": "static-source"
+      }
+    },
+    {
+      "name": "server-only",
+      "displayName": "Server-only build",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/server-only",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CLEARSPACE_ENABLE_TESTS": "ON",
+        "CLEARSPACE_ENABLE_QT_CLIENT": "OFF",
+        "CLEARSPACE_DEPS_MODE": "auto"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev"
+    },
+    {
+      "name": "release-bundle",
+      "configurePreset": "release-bundle"
+    },
+    {
+      "name": "release-static-qt",
+      "configurePreset": "release-static-qt"
+    },
+    {
+      "name": "server-only",
+      "configurePreset": "server-only"
+    }
+  ]
+}

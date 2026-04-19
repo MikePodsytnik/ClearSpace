@@ -13,10 +13,10 @@ target_compile_features(clearspace_persistence PUBLIC cxx_std_20)
 find_package(SQLite3 REQUIRED)
 
 set(CLEARSPACE_SQLITE_TARGET "")
-if (TARGET SQLite::SQLite3)
-  set(CLEARSPACE_SQLITE_TARGET SQLite::SQLite3)
-elseif (TARGET SQLite3::SQLite3)
+if (TARGET SQLite3::SQLite3)
   set(CLEARSPACE_SQLITE_TARGET SQLite3::SQLite3)
+elseif (TARGET SQLite::SQLite3)
+  set(CLEARSPACE_SQLITE_TARGET SQLite::SQLite3)
 endif()
 
 if (CLEARSPACE_SQLITE_TARGET STREQUAL "")
