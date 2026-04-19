@@ -1,69 +1,51 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24)
 
 if (POLICY CMP0167)
   cmake_policy(SET CMP0167 NEW)
 endif()
 
 project(clearspace
-  VERSION 0.2.0
-  DESCRIPTION "ClearSpace core + persistence + network API"
-  LANGUAGES CXX
+        VERSION 0.3.0
+        DESCRIPTION "ClearSpace collaborative whiteboard"
+        LANGUAGES CXX
 )
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+include(GNUInstallDirs)
+include(CMakeDependentOption)
 
 option(CLEARSPACE_ENABLE_TESTS "Build tests" ON)
+option(CLEARSPACE_ENABLE_QT_CLIENT "Build Qt client" ON)
+option(CLEARSPACE_BUILD_SHARED_LIBS "Build ClearSpace libraries as shared" OFF)
+option(CLEARSPACE_ENABLE_INSTALL "Enable install rules" ON)
+option(CLEARSPACE_ENABLE_PACKAGING "Enable CPack package generation" ON)
+
+set(BUILD_SHARED_LIBS ${CLEARSPACE_BUILD_SHARED_LIBS})
+
+set(CLEARSPACE_DEPS_MODE "auto" CACHE STRING "Dependency mode: auto|system|fetch")
+set_property(CACHE CLEARSPACE_DEPS_MODE PROPERTY STRINGS auto system fetch)
+
+set(CLEARSPACE_QT_MODE "deploy" CACHE STRING "Qt delivery mode: deploy|system-only|static-source")
+set_property(CACHE CLEARSPACE_QT_MODE PROPERTY STRINGS deploy system-only static-source)
+
+set(CLEARSPACE_QT_VERSION "6.8.2" CACHE STRING "Qt version used for static-source builds")
+set(CLEARSPACE_QT_STATIC_INSTALL_DIR "${CMAKE_BINARY_DIR}/qt-static" CACHE PATH "Where static Qt should be installed")
+set(CLEARSPACE_QT_STATIC_BUILD_DIR "${CMAKE_BINARY_DIR}/qt-build" CACHE PATH "Where static Qt should be built")
 
 set(CLEARSPACE_SANITIZER "none" CACHE STRING "Sanitizer: none|asan|tsan|ubsan")
 set_property(CACHE CLEARSPACE_SANITIZER PROPERTY STRINGS none asan tsan ubsan)
 
-find_package(Boost CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
+include(ClearSpaceWarnings)
+include(ClearSpaceDependencies)
 
-function(clearspace_enable_warnings target_name)
-  if (MSVC)
-    target_compile_options(${target_name} PRIVATE /W4 /permissive-)
-  else()
-    target_compile_options(${target_name} PRIVATE
-      -Wall
-      -Wextra
-      -Wpedantic
-      -Wshadow
-      -Wnon-virtual-dtor
-      -Wold-style-cast
-      -Woverloaded-virtual
-      -Wnull-dereference
-    )
-  endif()
-endfunction()
-
-function(clearspace_enable_sanitizer target_name)
-  if (CLEARSPACE_SANITIZER STREQUAL "none")
-    return()
-  endif()
-
-  if (MSVC)
-    message(WARNING "Sanitizers via flags are not configured for MSVC in this template.")
-    return()
-  endif()
-
-  if (CLEARSPACE_SANITIZER STREQUAL "asan")
-    target_compile_options(${target_name} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
-    target_link_options(${target_name} PRIVATE -fsanitize=address,undefined)
-  elseif (CLEARSPACE_SANITIZER STREQUAL "tsan")
-    target_compile_options(${target_name} PRIVATE -fsanitize=thread -fno-omit-frame-pointer)
-    target_link_options(${target_name} PRIVATE -fsanitize=thread)
-  elseif (CLEARSPACE_SANITIZER STREQUAL "ubsan")
-    target_compile_options(${target_name} PRIVATE -fsanitize=undefined -fno-omit-frame-pointer)
-    target_link_options(${target_name} PRIVATE -fsanitize=undefined)
-  else()
-    message(FATAL_ERROR "Unknown CLEARSPACE_SANITIZER: ${CLEARSPACE_SANITIZER}")
-  endif()
-endfunction()
+clearspace_setup_common_dependencies()
 
 add_subdirectory(core)
 add_subdirectory(persistence)
@@ -71,7 +53,23 @@ add_subdirectory(transport)
 add_subdirectory(server)
 add_subdirectory(app)
 
+if (CLEARSPACE_ENABLE_QT_CLIENT)
+  add_subdirectory(client)
+endif()
+
 if (CLEARSPACE_ENABLE_TESTS)
   enable_testing()
   add_subdirectory(tests)
+endif()
+
+
+if (CLEARSPACE_ENABLE_PACKAGING)
+  set(CPACK_PACKAGE_NAME "ClearSpace")
+  set(CPACK_PACKAGE_VENDOR "OpenAI")
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ClearSpace collaborative whiteboard")
+  set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "ClearSpace")
+  set(CPACK_SOURCE_GENERATOR "ZIP;TGZ")
+  set(CPACK_GENERATOR "ZIP;TGZ")
+  include(CPack)
 endif()
